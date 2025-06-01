@@ -1,24 +1,31 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
+
 app.use(express.json());
 
-const SHOP_NAME = process.env.SHOPIFY_SHOP;
-const X-Shopify-Access-Token = process.env.SHOPIFY_TOKEN;
-
-app.post('/orders', async (req, res) => {
+app.post('/graphql', async (req, res) => {
   try {
-    const response = await axios.get(`https://${SHOP_NAME}/admin/api/2025-04/orders.json`, {
-      headers: { 'X-Shopify-Access-Token': ACCESS_TOKEN },
+    const response = await axios.post(
+      'https://tudk1i-bi.myshopify.com/admin/api/2024-04/graphql.json',
+      req.body, // raw GraphQL query/mutation
+      {
+        headers: {
+          'X-Shopify-Access-Token': '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',
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.message,
+      details: error.response?.data,
     });
-    res.json(response.data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('DeerDoc Shopify Proxy is running!');
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Proxy running on port 3000');
 });
-
-app.listen(3000, () => console.log('Server running on port 3000'));
