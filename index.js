@@ -4,11 +4,11 @@ const app = express();
 app.use(express.json());
 
 const SHOP_NAME = process.env.SHOPIFY_SHOP;
-const ACCESS_TOKEN = process.env.SHOPIFY_TOKEN;
+const X-Shopify-Access-Token = process.env.SHOPIFY_TOKEN;
 
 app.post('/orders', async (req, res) => {
   try {
-    const response = await axios.get(`https://${SHOP_NAME}/admin/api/2024-01/orders.json`, {
+    const response = await axios.get(`https://${SHOP_NAME}/admin/api/2025-04/orders.json`, {
       headers: { 'X-Shopify-Access-Token': ACCESS_TOKEN },
     });
     res.json(response.data);
